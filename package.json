@@ -1,0 +1,21 @@
+{
+    "name": "inventory-management",
+    "version": "1.0.0",
+    "description": "",
+    "license": "MIT",
+    "author": "Murtaza Tuta",
+    "type": "commonjs",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "dependencies": {
+        "express": "^5.1.0",
+        "mongoose": "^9.0.0",
+        "mongoose-sequence": "^6.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.11"
+    }
+}
