@@ -5,6 +5,10 @@ const Order = require('../models/order');
 
 const ITEMS_PER_PAGE = 2;
 
+function NotFound(res, message) {
+    return res.status(404).json({ error: message + ' Not found' });
+}
+
 exports.createProduct = (req, res, next) => {
     if (!req.body)
         return res.status(400).json({ error: 'body cannot be empty' });
@@ -55,7 +59,7 @@ exports.getSingleProduct = (req, res, next) => {
     Product.findOne({ id: id })
         .then(product => {
             if (!product) {
-                return res.status(404).json({ error: 'Product not found' });
+                return NotFound(res, 'Product');
             }
 
             return res.status(200).json(product);
@@ -120,8 +124,7 @@ exports.updateProduct = (req, res, next) => {
 
     Product.findOne({ id: id })
         .then(product => {
-            if (!product)
-                return res.status(404).json({ error: 'Product not found' });
+            if (!product) return NotFound(res, 'Product');
 
             product.name = name;
             product.sku = sku;
@@ -150,9 +153,7 @@ exports.deleteProduct = (req, res, next) => {
     Product.findOne({ id: id })
         .then(product => {
             if (!product) {
-                return res.status(404).json({
-                    error: 'Product not found',
-                });
+                return NotFound(res, 'Product');
             }
 
             Product.deleteOne({ id: id }).then(result => {
@@ -179,10 +180,7 @@ exports.getSingleOrder = (req, res, next) => {
         .then(order => {
             if (order) {
                 return res.status(201).json(order);
-            } else
-                return res
-                    .status(404)
-                    .json({ error: "Order with this id doesn't exist" });
+            } else return NotFound(res, 'Order id');
         })
         .catch(err => {
             console.log(err);
@@ -223,10 +221,7 @@ exports.createOrder = async (req, res, next) => {
 
     for (const item of items) {
         const product = await Product.findOne({ id: item.product_id });
-        if (!product)
-            return res.status(404).json({
-                error: 'Product not found',
-            });
+        if (!product) return NotFound(res, 'Product');
 
         if (product.stock < item.quantity) {
             return res.status(400).json({

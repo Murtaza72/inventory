@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 
 const inventoryController = require('../controllers/inventory');
+const isAuthenticated = require('../middleware/auth.js');
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.get('/products/:id', inventoryController.getSingleProduct);
 
 router.post(
     '/products',
+    isAuthenticated,
     [
         body('name').trim().notEmpty().withMessage('Name is required'),
         body('sku').trim().notEmpty().withMessage('SKU is required'),
@@ -31,6 +33,7 @@ router.post(
 
 router.put(
     '/products/:id',
+    isAuthenticated,
     [
         body('name').trim().notEmpty().withMessage('Name is required'),
         body('sku').trim().notEmpty().withMessage('SKU is required'),
@@ -47,16 +50,21 @@ router.put(
     inventoryController.updateProduct
 );
 
-router.delete('/products/:id', inventoryController.deleteProduct);
+router.delete(
+    '/products/:id',
+    isAuthenticated,
+    inventoryController.deleteProduct
+);
 
 // Orders //
 
-router.get('/orders', inventoryController.getAllOrders);
+router.get('/orders', isAuthenticated, inventoryController.getAllOrders);
 
-router.get('/orders/:id', inventoryController.getSingleOrder);
+router.get('/orders/:id', isAuthenticated, inventoryController.getSingleOrder);
 
 router.post(
     '/orders',
+    isAuthenticated,
     [
         body('items').isArray({ min: 1 }),
         body('items.*.product_id')
