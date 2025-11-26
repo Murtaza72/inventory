@@ -7,7 +7,6 @@ const router = express.Router();
 
 // Products //
 
-// implement pagination and search
 router.get('/products', inventoryController.getAllProducts);
 
 router.get('/products/:id', inventoryController.getSingleProduct);
@@ -56,8 +55,22 @@ router.get('/orders', inventoryController.getAllOrders);
 
 router.get('/orders/:id', inventoryController.getSingleOrder);
 
-router.post('/orders', (req, res, next) => {
-    res.send('POST /orders');
-});
+router.post(
+    '/orders',
+    [
+        body('items').isArray({ min: 1 }),
+        body('items.*.product_id')
+            .notEmpty()
+            .withMessage('product_id is required')
+            .isInt({ min: 1 })
+            .withMessage('invalid id'),
+        body('items.*.quantity')
+            .notEmpty()
+            .withMessage('quantity is required')
+            .isInt({ min: 1 })
+            .withMessage('quantity must be at least 1'),
+    ],
+    inventoryController.createOrder
+);
 
 module.exports = router;

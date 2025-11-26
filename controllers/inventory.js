@@ -3,6 +3,8 @@ const { validationResult } = require('express-validator');
 const Product = require('../models/product');
 const Order = require('../models/order');
 
+const ITEMS_PER_PAGE = 2;
+
 exports.createProduct = (req, res, next) => {
     if (!req.body)
         return res.status(400).json({ error: 'body cannot be empty' });
@@ -50,7 +52,7 @@ exports.createProduct = (req, res, next) => {
 exports.getSingleProduct = (req, res, next) => {
     const id = req.params.id;
 
-    Product.findOne({ pid: id })
+    Product.findOne({ id: id })
         .then(product => {
             if (!product) {
                 return res.status(404).json({ error: 'Product not found' });
@@ -67,7 +69,26 @@ exports.getSingleProduct = (req, res, next) => {
 };
 
 exports.getAllProducts = (req, res, next) => {
+    const page = +req.query.page || 1; // + converts it to a number
+    const sku = req.query.sku;
+    let totalItems;
+
     Product.find()
+        .countDocuments()
+        .then(numProducts => {
+            totalItems = numProducts;
+            let products;
+
+            if (sku) {
+                products = Product.findOne({ sku: sku });
+            } else {
+                products = Product.find();
+            }
+
+            return products
+                .skip((page - 1) * ITEMS_PER_PAGE)
+                .limit(ITEMS_PER_PAGE);
+        })
         .then(products => {
             return res.status(200).json(products);
         })
@@ -97,7 +118,7 @@ exports.updateProduct = (req, res, next) => {
     const price = req.body.price;
     const stock = req.body.stock;
 
-    Product.findOne({ pid: id })
+    Product.findOne({ id: id })
         .then(product => {
             if (!product)
                 return res.status(404).json({ error: 'Product not found' });
@@ -126,7 +147,7 @@ exports.updateProduct = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
     const id = req.params.id;
 
-    Product.findOne({ pid: id })
+    Product.findOne({ id: id })
         .then(product => {
             if (!product) {
                 return res.status(404).json({
@@ -134,8 +155,10 @@ exports.deleteProduct = (req, res, next) => {
                 });
             }
 
-            Product.deleteOne({ pid: id });
-            return res.status(200).json({ success: 'Product deleted' });
+            Product.deleteOne({ id: id }).then(result => {
+                if (result.deletedCount > 0)
+                    return res.status(200).json({ success: 'Product deleted' });
+            });
         })
         .catch(err => {
             console.log(err);
@@ -152,7 +175,7 @@ exports.deleteProduct = (req, res, next) => {
 exports.getSingleOrder = (req, res, next) => {
     const id = req.params.id;
 
-    Order.findOne({ pid: id })
+    Order.findOne({ id: id })
         .then(order => {
             if (order) {
                 return res.status(201).json(order);
@@ -182,4 +205,59 @@ exports.getAllOrders = (req, res, next) => {
         });
 };
 
-exports.createOrder = (req, res, next) => {};
+exports.createOrder = async (req, res, next) => {
+    if (!req.body)
+        return res.status(400).json({ error: 'body cannot be empty' });
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: errors.array().map(err => err.msg),
+        });
+    }
+
+    const items = req.body.items;
+
+    let totalAmount = 0;
+    const orderItems = [];
+
+    for (const item of items) {
+        const product = await Product.findOne({ id: item.product_id });
+        if (!product)
+            return res.status(404).json({
+                error: 'Product not found',
+            });
+
+        if (product.stock < item.quantity) {
+            return res.status(400).json({
+                error: 'Not enough stock',
+            });
+        }
+
+        totalAmount += product.price * item.quantity;
+
+        orderItems.push({
+            product_id: product.id,
+            quantity: item.quantity,
+            price: product.price * item.quantity,
+        });
+    }
+
+    const order = new Order({
+        total_amount: totalAmount,
+        items: orderItems,
+    });
+
+    order.save();
+
+    for (const item of items) {
+        await Product.findOneAndUpdate(
+            { id: item.product_id },
+            {
+                $inc: { stock: -item.quantity },
+            }
+        );
+    }
+
+    return res.status(201).json(order);
+};

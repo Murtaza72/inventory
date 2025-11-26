@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 
 const product = new Schema(
     {
-        pid: {
+        id: {
             type: Number,
         },
         name: {
@@ -37,7 +37,7 @@ const product = new Schema(
 );
 
 product.pre('save', async function (next) {
-    if (this.pid) return next; // don't increment if it exists
+    if (this.id) return next; // don't increment if it exists
 
     const counter = await Counter.findByIdAndUpdate(
         { _id: 'product' },
@@ -45,7 +45,7 @@ product.pre('save', async function (next) {
         { new: true, upsert: true }
     );
 
-    this.pid = counter.seq;
+    this.id = counter.seq;
     return next;
 });
 

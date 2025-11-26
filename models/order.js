@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Counter = require('./counter');
+
 const Schema = mongoose.Schema;
 
 const order = new Schema({
@@ -8,9 +10,7 @@ const order = new Schema({
     },
     order_number: {
         type: String,
-        required: true,
         unique: true,
-        trim: true,
     },
     total_amount: {
         type: Number,
@@ -24,6 +24,20 @@ const order = new Schema({
             price: { type: Number, required: true },
         },
     ],
+});
+
+order.pre('save', async function (next) {
+    if (this.id) return next;
+
+    const counter = await Counter.findByIdAndUpdate(
+        { _id: 'order' },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true }
+    );
+
+    this.id = counter.seq;
+    this.order_number = 'ORD100' + counter.seq;
+    return next;
 });
 
 module.exports = mongoose.model('Order', order);
