@@ -3,7 +3,7 @@ const Order = require('../models/order');
 
 exports.createProduct = (req, res, next) => {
     if (!req.body)
-        return res.status(400).json({ error: 'no data was provided' });
+        return res.status(400).json({ message: 'body cannot be empty' });
 
     const name = req.body.name;
     const sku = req.body.sku;
@@ -13,22 +13,22 @@ exports.createProduct = (req, res, next) => {
     if (!name || !sku || price == null) {
         return res
             .status(400)
-            .json({ error: 'name, sku, and price are required' });
+            .json({ message: 'name, sku, and price are required' });
     }
 
     if (price < 0) {
-        return res.status(400).json({ error: 'price must be >= 0' });
+        return res.status(400).json({ message: 'price must be >= 0' });
     }
 
     if (stock != null && stock < 0) {
-        return res.status(400).json({ error: 'stock must be >= 0' });
+        return res.status(400).json({ message: 'stock must be >= 0' });
     }
 
     Product.findOne({ sku: sku }).then(exists => {
         if (exists)
             return res
                 .status(400)
-                .json({ error: 'Product with this SKU already exists' });
+                .json({ message: 'Product with this SKU already exists' });
 
         // doesnt exists, create it
         const product = new Product({
@@ -44,8 +44,8 @@ exports.createProduct = (req, res, next) => {
                 return res.status(201).json(product);
             })
             .catch(err => {
-                const error = new Error(err);
                 console.log(err);
+                const error = new Error(err);
                 error.httpStatusCode = 500;
                 return next(error);
             });
@@ -57,16 +57,15 @@ exports.getSingleProduct = (req, res, next) => {
 
     Product.findOne({ pid: id })
         .then(product => {
-            if (product) {
-                return res.status(201).json(product);
-            } else
-                return res
-                    .status(404)
-                    .json({ error: "Product with this id doesn't exist" });
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+
+            return res.status(200).json(product);
         })
         .catch(err => {
-            const error = new Error(err);
             console.log(err);
+            const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);
         });
@@ -78,8 +77,30 @@ exports.getAllProducts = (req, res, next) => {
             return res.status(200).json(products);
         })
         .catch(err => {
-            const error = new Error(err);
             console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+};
+
+exports.deleteProduct = (req, res, next) => {
+    const id = req.params.id;
+
+    Product.findOne({ pid: id })
+        .then(product => {
+            if (!product) {
+                return res.status(404).json({
+                    message: 'Product not found',
+                });
+            }
+
+            Product.deleteOne({ pid: id });
+            return res.status(200).json({ message: 'Product deleted' });
+        })
+        .catch(err => {
+            console.log(err);
+            const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);
         });
@@ -95,11 +116,11 @@ exports.getSingleOrder = (req, res, next) => {
             } else
                 return res
                     .status(404)
-                    .json({ error: "Order with this id doesn't exist" });
+                    .json({ message: "Order with this id doesn't exist" });
         })
         .catch(err => {
-            const error = new Error(err);
             console.log(err);
+            const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);
         });
@@ -111,8 +132,8 @@ exports.getAllOrders = (req, res, next) => {
             return res.status(200).json(orders);
         })
         .catch(err => {
-            const error = new Error(err);
             console.log(err);
+            const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);
         });

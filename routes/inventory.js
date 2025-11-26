@@ -6,10 +6,10 @@ const router = express.Router();
 
 // Products //
 
-router.get('/products/:id', inventoryController.getSingleProduct);
-
 // implement pagination and search
 router.get('/products', inventoryController.getAllProducts);
+
+router.get('/products/:id', inventoryController.getSingleProduct);
 
 router.post('/products', inventoryController.createProduct);
 
@@ -17,9 +17,7 @@ router.put('/products/:id', (req, res, next) => {
     res.send('PUT /products/' + req.params.id);
 });
 
-router.delete('/products/:id', (req, res, next) => {
-    res.send('DELETE /products/' + req.params.id);
-});
+router.delete('/products/:id', inventoryController.deleteProduct);
 
 // Orders //
 
