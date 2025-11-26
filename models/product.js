@@ -37,6 +37,8 @@ const product = new Schema(
 );
 
 product.pre('save', async function (next) {
+    if (this.pid) return next; // don't increment if it exists
+
     const counter = await Counter.findByIdAndUpdate(
         { _id: 'product' },
         { $inc: { seq: 1 } },

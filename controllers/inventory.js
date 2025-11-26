@@ -1,28 +1,23 @@
+const { validationResult } = require('express-validator');
+
 const Product = require('../models/product');
 const Order = require('../models/order');
 
 exports.createProduct = (req, res, next) => {
     if (!req.body)
-        return res.status(400).json({ message: 'body cannot be empty' });
+        return res.status(400).json({ error: 'body cannot be empty' });
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: errors.array().map(err => err.msg),
+        });
+    }
 
     const name = req.body.name;
     const sku = req.body.sku;
     const price = req.body.price;
     const stock = req.body.stock;
-
-    if (!name || !sku || price == null) {
-        return res
-            .status(400)
-            .json({ message: 'name, sku, and price are required' });
-    }
-
-    if (price < 0) {
-        return res.status(400).json({ message: 'price must be >= 0' });
-    }
-
-    if (stock != null && stock < 0) {
-        return res.status(400).json({ message: 'stock must be >= 0' });
-    }
 
     Product.findOne({ sku: sku }).then(exists => {
         if (exists)
@@ -58,7 +53,7 @@ exports.getSingleProduct = (req, res, next) => {
     Product.findOne({ pid: id })
         .then(product => {
             if (!product) {
-                return res.status(404).json({ message: 'Product not found' });
+                return res.status(404).json({ error: 'Product not found' });
             }
 
             return res.status(200).json(product);
@@ -84,19 +79,41 @@ exports.getAllProducts = (req, res, next) => {
         });
 };
 
-exports.deleteProduct = (req, res, next) => {
+exports.updateProduct = (req, res, next) => {
     const id = req.params.id;
+
+    if (!req.body)
+        return res.status(400).json({ error: 'body cannot be empty' });
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: errors.array().map(err => err.msg),
+        });
+    }
+
+    const name = req.body.name;
+    const sku = req.body.sku;
+    const price = req.body.price;
+    const stock = req.body.stock;
 
     Product.findOne({ pid: id })
         .then(product => {
-            if (!product) {
-                return res.status(404).json({
-                    message: 'Product not found',
-                });
-            }
+            if (!product)
+                return res.status(404).json({ error: 'Product not found' });
 
-            Product.deleteOne({ pid: id });
-            return res.status(200).json({ message: 'Product deleted' });
+            product.name = name;
+            product.sku = sku;
+            product.stock = stock;
+            product.price = price;
+            product.updated_at = new Date();
+
+            return product.save();
+        })
+        .then(updatedProduct => {
+            if (updatedProduct) {
+                return res.status(200).json(updatedProduct);
+            }
         })
         .catch(err => {
             console.log(err);
@@ -105,6 +122,32 @@ exports.deleteProduct = (req, res, next) => {
             return next(error);
         });
 };
+
+exports.deleteProduct = (req, res, next) => {
+    const id = req.params.id;
+
+    Product.findOne({ pid: id })
+        .then(product => {
+            if (!product) {
+                return res.status(404).json({
+                    error: 'Product not found',
+                });
+            }
+
+            Product.deleteOne({ pid: id });
+            return res.status(200).json({ success: 'Product deleted' });
+        })
+        .catch(err => {
+            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+};
+
+// ----------
+// Orders //
+// ----------
 
 exports.getSingleOrder = (req, res, next) => {
     const id = req.params.id;
@@ -116,7 +159,7 @@ exports.getSingleOrder = (req, res, next) => {
             } else
                 return res
                     .status(404)
-                    .json({ message: "Order with this id doesn't exist" });
+                    .json({ error: "Order with this id doesn't exist" });
         })
         .catch(err => {
             console.log(err);
@@ -138,3 +181,5 @@ exports.getAllOrders = (req, res, next) => {
             return next(error);
         });
 };
+
+exports.createOrder = (req, res, next) => {};
