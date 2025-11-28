@@ -1,0 +1,672 @@
+{
+  "info": {
+    "name": "inventory",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "login"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\":\"murtaza22@mail.com\",\n  \"password\": \"password1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "register"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\":\"murtaza22@mail.com\",\n  \"password\": \"password1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ],
+      "folderId": null,
+      "id": "fl_k7RRB7HXoS"
+    },
+    {
+      "name": "Order",
+      "item": [
+        {
+          "name": "Create Order multiple items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "orders"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 5\n    },\n    {\n      \"product_id\": 3,\n      \"quantity\": 5\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "orders"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": -1,\n      \"quantity\": 2.3\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "orders"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 5\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get single order",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/orders/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "orders",
+                "2"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get all orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "orders"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ],
+      "folderId": null,
+      "id": "fl_MSFWVFhrAa"
+    },
+    {
+      "name": "Product",
+      "item": [
+        {
+          "name": "GET all products paginated",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "${[ API_URL ]}/products?page=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products?page=2"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Watch\",\n  \"sku\": \"P3\",\n  \"price\": 49.99,\n  \"stock\": 15\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET all products search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "${[ API_URL ]}/products?sku=P3",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products?sku=P3"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Update product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products",
+                "1"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \" \",\n  \"sku\": \"P1\",\n  \"stock\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Create product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"sku\": \"\",\n  \"price\": -199.99,\n  \"stock\": -6\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PS5\",\n  \"sku\": \"P2\",\n  \"price\": 199.99,\n  \"stock\": 50\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/products/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products",
+                "2"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Update product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products",
+                "1"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone\",\n  \"sku\": \"P1\",\n  \"price\": 199.99,\n  \"stock\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "enabled": true
+              },
+              {
+                "key": "Authorization",
+                "value": "${[ token ]}",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone\",\n  \"sku\": \"P1\",\n  \"price\": 999.99,\n  \"stock\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get single product",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "enabled": true
+              }
+            ],
+            "url": {
+              "raw": "${[ API_URL ]}/products/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products",
+                "2"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "GET all products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "${[ API_URL ]}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "${[ API_URL ]}",
+                "products"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ],
+      "folderId": null,
+      "id": "fl_5G2DYxvXYT"
+    }
+  ],
+  "variable": []
+}

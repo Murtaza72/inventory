@@ -1,0 +1,18 @@
+{
+  "name": "Global Variables",
+  "values": [
+    {
+      "key": "API_URL",
+      "value": "http://localhost:3000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjZlNTVhNTdjNTdmMzQ3NzJhMmMyNiIsImVtYWlsIjoibXVydGF6YTIyQG1haWwuY29tIiwiaWF0IjoxNzY0MTU2NzY1LCJleHAiOjE3NjQyNDMxNjV9.U-wbG0NDKPaCpMnDzV4GoegG3S8QR0SFs0K8pg2trI4",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}
