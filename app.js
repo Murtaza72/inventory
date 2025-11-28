@@ -2,11 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-const inventoryRoutes = require('./routes/inventory');
 const authRoutes = require('./routes/auth');
-
-const PORT = 3000;
-const MONGODB_URI = `mongodb://127.0.0.1:27017/inventory`;
+const inventoryRoutes = require('./routes/inventory');
 
 dotenv.config();
 
@@ -19,10 +16,10 @@ app.use(authRoutes);
 app.use(inventoryRoutes);
 
 mongoose
-    .connect(MONGODB_URI, {})
+    .connect(process.env.MONGODB_URI, {})
     .then(
-        app.listen(PORT, () => {
-            console.log('http://localhost:' + PORT);
+        app.listen(process.env.PORT, () => {
+            console.log(process.env.HOST + ':' + process.env.PORT);
         })
     )
     .catch(err => console.error('MongoDB connection error:', err));
