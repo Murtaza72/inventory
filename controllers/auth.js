@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { validationResult } = require('express-validator');
 
-exports.register = async (req, res) => {
+exports.register = (req, res) => {
     const { email, password } = req.body;
 
     const errors = validationResult(req);
@@ -41,7 +41,7 @@ exports.register = async (req, res) => {
         });
 };
 
-exports.login = async (req, res) => {
+exports.login = (req, res) => {
     const { email, password } = req.body;
 
     const errors = validationResult(req);

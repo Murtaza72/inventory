@@ -10,6 +10,8 @@ const router = express.Router();
 
 router.get('/products', inventoryController.getAllProducts);
 
+router.get('/products/all', inventoryController.getProducts);
+
 router.get('/products/:id', inventoryController.getSingleProduct);
 
 router.post(
@@ -58,7 +60,7 @@ router.delete(
 
 // Orders //
 
-router.get('/orders', isAuthenticated, inventoryController.getAllOrders);
+router.get('/orders', inventoryController.getAllOrders);
 
 router.get('/orders/:id', isAuthenticated, inventoryController.getSingleOrder);
 

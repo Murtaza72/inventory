@@ -104,6 +104,19 @@ exports.getAllProducts = (req, res, next) => {
         });
 };
 
+exports.getProducts = (req, res, next) => {
+    Product.find()
+        .then(products => {
+            return res.status(200).json(products);
+        })
+        .catch(err => {
+            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+};
+
 exports.updateProduct = (req, res, next) => {
     const id = req.params.id;
 
